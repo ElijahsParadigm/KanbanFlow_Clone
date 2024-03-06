@@ -7,6 +7,9 @@ const theme = createTheme({
       default: "#1D1F26",
     },
   },
+  typography: {
+    fontFamily: "Lato, sans-serif",
+  },
 });
 
 export default theme;
