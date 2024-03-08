@@ -3,7 +3,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./theme";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthScreen from "./screens/AuthScreen";
-import { auth } from "./firebse";
+import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 const App = () => {

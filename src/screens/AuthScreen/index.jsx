@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Container, Stack, TextField, Button, Typography } from "@mui/material";
 import LogoImg from "../../assets/logo.svg";
 import ImageEl from "../../components/utilis/imageEl";
-import { auth } from "../../firebse";
+import { auth } from "../../firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
