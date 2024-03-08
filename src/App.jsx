@@ -1,9 +1,19 @@
+import { useEffect } from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./theme";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthScreen from "./screens/AuthScreen";
+import { auth } from "./firebse";
+import { onAuthStateChanged } from "firebase/auth";
 
 const App = () => {
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      console.log(user);
+    });
+
+    return () => unsub();
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

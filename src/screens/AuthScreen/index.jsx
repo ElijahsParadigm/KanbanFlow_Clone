@@ -2,12 +2,18 @@ import { useState } from "react";
 import { Container, Stack, TextField, Button, Typography } from "@mui/material";
 import LogoImg from "../../assets/logo.svg";
 import ImageEl from "../../components/utilis/imageEl";
+import { auth } from "../../firebse";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 
 const initForm = {
   email: "",
   password: "",
 };
 const AuthScreen = () => {
+  const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState(initForm);
 
@@ -20,8 +26,20 @@ const AuthScreen = () => {
       ...oldForm,
       [event.target.name]: event.target.value,
     }));
-
-  const handleAuth = async () => {};
+  // This function allows the user to signin or create an account.
+  const handleAuth = async () => {
+    try {
+      setLoading(true);
+      if (isLogin) {
+        await signInWithEmailAndPassword(auth, form.email, form.password);
+      } else {
+        await createUserWithEmailAndPassword(auth, form.email, form.password);
+      }
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
 
   return (
     <Container
@@ -52,7 +70,7 @@ const AuthScreen = () => {
           label="Password"
         />
         <Button
-          disabled={!form.email.trim() || !form.password.trim()}
+          disabled={loading || !form.email.trim() || !form.password.trim()}
           onClick={handleAuth}
           size="large"
           variant="contained"
