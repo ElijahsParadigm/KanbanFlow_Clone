@@ -36,7 +36,9 @@ const AuthScreen = () => {
         await createUserWithEmailAndPassword(auth, form.email, form.password);
       }
     } catch (err) {
-      console.log(err);
+      const msg = err.catch.split("auth/")[1].split("-").join(" ");
+
+      console.log(msg);
       setLoading(false);
     }
   };
