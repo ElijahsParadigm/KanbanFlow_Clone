@@ -5,10 +5,14 @@ const store = (set) => ({
   loader: true,
   isLoggedIn: false,
   setLoginStatus: (status) =>
-    set({
-      isLoggedIn: status,
-      loader: false,
-    }),
+    set(
+      {
+        isLoggedIn: status,
+        loader: false,
+      },
+      false,
+      "setLoginStatus"
+    ),
 });
 
 const useStore = create(devtools(store));

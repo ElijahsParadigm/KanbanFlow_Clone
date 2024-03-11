@@ -6,18 +6,21 @@ import AuthScreen from "./screens/AuthScreen";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import useStore from "./store";
+import AppLoader from "./components/utilis/layout/AppLoader";
 
 const App = () => {
   const { loader, setLoginStatus } = useStore();
 
-  console.log(loader);
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
-      console.log(user);
+      setLoginStatus(!!user);
     });
 
     return () => unsub();
   }, []);
+
+  if (loader) return <AppLoader />;
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
