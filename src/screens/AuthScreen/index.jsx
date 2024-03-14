@@ -26,6 +26,7 @@ const AuthScreen = () => {
       ...oldForm,
       [event.target.name]: event.target.value,
     }));
+
   // This function allows the user to signin or create an account.
   const handleAuth = async () => {
     try {
