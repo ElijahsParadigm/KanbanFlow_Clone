@@ -15,9 +15,17 @@ const BoardCard = () => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography fontWeight={400} variant="h6">
-            Board name
-          </Typography>
+          <Box width="50%">
+            <Typography
+              textOverflow="ellipsis"
+              overflow="hidden"
+              whiteSpace="nowrap"
+              fontWeight={400}
+              variant="h6"
+            >
+              Board name
+            </Typography>
+          </Box>
 
           <IconButton size="small">
             <OpenIcon />
