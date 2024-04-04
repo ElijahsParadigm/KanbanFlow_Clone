@@ -1,5 +1,10 @@
 import { useEffect } from "react";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import {
+  CssBaseline,
+  Snackbar,
+  SnackbarContent,
+  ThemeProvider,
+} from "@mui/material";
 import theme from "./theme";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { auth } from "./firebase";
@@ -10,10 +15,12 @@ import AppLoader from "./components/utilis/layout/AppLoader";
 // Screens
 import AuthScreen from "./screens/AuthScreen";
 import BoardsScreen from "./screens/BoardsScreen";
+import BoardScreen from "./screens/BoardScreen";
 
 // Routes
 import PublicOnlyRoute from "./components/utilis/PublicOnlyRoute";
 import PrivateRoute from "./components/utilis/PrivateRoute";
+import SnackbarManager from "./components/utilis/layout/SnackbarManager";
 
 const App = () => {
   const { loader, setLoginStatus } = useStore();
@@ -31,6 +38,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <SnackbarManager />
       {/* Pushes user to the BoardsScreen using the Router */}
       <BrowserRouter>
         <Routes>
@@ -41,6 +49,10 @@ const App = () => {
           <Route
             path="/boards"
             element={<PrivateRoute Component={BoardsScreen} />}
+          />
+          <Route
+            path="/boards/:boardId"
+            element={<PrivateRoute Component={BoardScreen} />}
           />
         </Routes>
       </BrowserRouter>
