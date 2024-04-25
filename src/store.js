@@ -11,7 +11,8 @@ const store = (set) => ({
   setBoards: (boards) =>
     set({ boards, areBoardsFetched: true }, false, "setBoards"),
   // Created ordering for board listing. Newest board should show first.
-  addBoard: (board) => set((old) => ({ boards: [board, ...old.boards] })),
+  addBoard: (board) =>
+    set((old) => ({ boards: [board, ...old.boards] }), false, "addBoard"),
   setLoginStatus: (status) =>
     set(
       {

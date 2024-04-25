@@ -1,8 +1,10 @@
 import { Stack, Grid, Typography, IconButton, Box } from "@mui/material";
 import OpenIcon from "@mui/icons-material/Launch";
 import { colors } from "../../theme";
+import { useNavigate } from "react-router-dom";
 
-const BoardCard = ({ name, color, createdAt }) => {
+const BoardCard = ({ name, color, createdAt, id }) => {
+  const navigate = useNavigate();
   return (
     <Grid item xs={3}>
       <Stack
@@ -28,7 +30,7 @@ const BoardCard = ({ name, color, createdAt }) => {
             </Typography>
           </Box>
 
-          <IconButton size="small">
+          <IconButton onClick={() => navigate(`/boards/${id}`)} size="small">
             <OpenIcon />
           </IconButton>
         </Stack>
