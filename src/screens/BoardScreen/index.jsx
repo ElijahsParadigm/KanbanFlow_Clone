@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import BoardInterface from "./BoardInterface";
 import BoardTopbar from "./BoardTopbar";
 import useStore from "../../store";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useApp from "../../hooks/useApp";
 import AppLoader from "../../components/utilis/layout/AppLoader";
 
@@ -15,9 +15,15 @@ const BoardScreen = () => {
   const { boardId } = useParams();
   const { fetchBoard } = useApp();
   const board = useMemo(() => boards.find((b) => b.id === boardId), []);
-  console.log(board);
+  const boardData = useMemo(() => data, [data]);
 
-  console.log({ data, lastUpdated, loading });
+  // console.log(board);
+  // console.log({ data, lastUpdated, loading });
+
+  const handleUpdateLastUpdated = useCallback(
+    () => setLastUpdated(new Date().toLocaleString("en-US")),
+    []
+  );
 
   const handleFetchedBoard = async () => {
     try {
@@ -48,7 +54,11 @@ const BoardScreen = () => {
         color={board.color}
         lastUpdated={lastUpdated}
       />
-      <BoardInterface />
+      <BoardInterface
+        boardData={boardData}
+        boardId={boardId}
+        updateLastUpdated={handleUpdateLastUpdated}
+      />
     </>
   );
 };
