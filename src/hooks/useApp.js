@@ -8,24 +8,46 @@ import {
   doc,
   getDoc,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
 import useStore from "../store";
+import { useNavigate } from "react-router-dom";
 
 const useApp = () => {
+  const navigate = useNavigate();
   const {
     currentUser: { uid },
   } = getAuth();
   const boardsColRef = collection(db, `users/${uid}/boards`);
-  const { setBoards, addBoard } = useStore();
+  const { boards, setBoards, addBoard, setToastr } = useStore();
+
+  const deleteBoard = async (boardId) => {
+    try {
+      // delete the doc from the DB
+      const docRef = doc(db, `users/${uid}/boards/${boardId}`);
+      await deleteDoc(docRef);
+
+      // update the boards in the store
+      const tBoards = boards.filter((board) => board.id !== boardId);
+      setBoards(tBoards);
+
+      // navigate to the boards screen
+      navigate("/boards");
+    } catch (err) {
+      setToastr("Error deleting the board");
+      throw err;
+    }
+  };
 
   const updateBoardData = async (boardId, tabs) => {
     const docRef = doc(db, `users/${uid}/boardsData/${boardId}`);
     try {
       await updateDoc(docRef, { tabs, lastUpdated: serverTimestamp() });
     } catch (err) {
-      console.log(err);
+      setToastr("Error updating board");
+      throw err;
     }
   };
 
@@ -37,7 +59,8 @@ const useApp = () => {
         return doc.data();
       } else return null;
     } catch (err) {
-      console.log(err);
+      setToastr("Error fetching board");
+      throw err;
     }
   };
 
@@ -59,7 +82,7 @@ const useApp = () => {
       });
     } catch (err) {
       // TODO showing the msg in toastr
-      console.log(err);
+      setToastr("Error creating board");
       throw err;
     }
   };
@@ -78,13 +101,13 @@ const useApp = () => {
       setBoards(boards);
     } catch (err) {
       // TODO showing the msg in toastr
-      console.log(err);
+      setToastr("Error fetching boards");
     } finally {
       if (setLoading) setLoading(false);
     }
   };
 
-  return { createBoard, fetchBoards, fetchBoard, updateBoardData };
+  return { createBoard, fetchBoards, fetchBoard, updateBoardData, deleteBoard };
 };
 
 export default useApp;
