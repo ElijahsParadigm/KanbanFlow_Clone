@@ -6,8 +6,9 @@ import useApp from "../../hooks/useApp";
 import useStore from "../../store";
 import { DragDropContext } from "react-beautiful-dnd";
 import AppLoader from "../../components/utilis/layout/AppLoader";
+import ShiftTaskModal from "./ShiftTaskModal";
 
-const statusMap = {
+export const statusMap = {
   todos: "Todos",
   inProgress: "In Progress",
   completed: "Completed",
@@ -15,6 +16,7 @@ const statusMap = {
 
 const BoardInterface = ({ boardData, boardId, updateLastUpdated }) => {
   const [loading, setLoading] = useState(false);
+  const [shiftTask, setShiftTask] = useState(null);
   const [addTaskTo, setAddTaskTo] = useState("");
   const [tabs, setTabs] = useState(structuredClone(boardData));
   const { updateBoardData } = useApp();
@@ -24,6 +26,33 @@ const BoardInterface = ({ boardData, boardId, updateLastUpdated }) => {
     (status) => setAddTaskTo(status),
     []
   );
+
+  const handleOpenShiftTaskModal = useCallback(
+    (task) => setShiftTask(task),
+    []
+  );
+
+  // console.log({ shiftTask });
+
+  const handleShiftTask = async (newStatus) => {
+    const oldStatus = shiftTask.status;
+    if (newStatus === oldStatus) return setShiftTask(null);
+    const dClone = structuredClone(tabs);
+
+    // remove theel from arr 1
+    const [task] = dClone[oldStatus].splice(shiftTask.index, 1);
+    //  add it to the arr 2
+    dClone[newStatus].unshift(task);
+
+    try {
+      await handleUpdateBoardData(dClone);
+      setShiftTask(null);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleUpdateBoardData = async (dClone) => {
     setLoading(true);
@@ -93,6 +122,13 @@ const BoardInterface = ({ boardData, boardId, updateLastUpdated }) => {
 
   return (
     <>
+      {!!shiftTask && (
+        <ShiftTaskModal
+          shiftTask={handleShiftTask}
+          task={shiftTask}
+          onClose={() => setShiftTask(null)}
+        />
+      )}
       {!!addTaskTo && (
         <AddTaskModal
           tabName={statusMap[addTaskTo]}
@@ -110,6 +146,7 @@ const BoardInterface = ({ boardData, boardId, updateLastUpdated }) => {
               tasks={tabs[status]}
               name={statusMap[status]}
               openAddTaskModal={handleOpenAddTaskModal}
+              openShiftTaskModal={handleOpenShiftTaskModal}
               removeTask={handleRemoveTask}
             />
           ))}

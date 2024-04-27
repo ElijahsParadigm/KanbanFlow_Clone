@@ -11,17 +11,25 @@ import CloseIcon from "@mui/icons-material/Close";
 import ModalHeader from "../../components/utilis/layout/ModalHeader";
 import { colors } from "../../theme";
 import useApp from "../../hooks/useApp";
+import useStore from "../../store";
 
 const CreateBoardModal = ({ closeModal }) => {
   const { createBoard } = useApp();
   const [name, setName] = useState("");
   const [color, setColor] = useState(0);
   const [loading, setLoading] = useState(false);
+  const { setToastr } = useStore();
 
   const handleCreate = async () => {
+    const tName = name.trim();
+    if (!tName) return setToastr("Please create board name");
+    if (!/^[a-zA-Z0-9\s]{1,20}$/.test(tName))
+      return setToastr(
+        "Board name cannot contain special chars and shouldn't be more than 20 chars in length"
+      );
     try {
       setLoading(true);
-      await createBoard({ name, color });
+      await createBoard({ name: tName, color });
       closeModal();
     } catch (err) {
       setLoading(false);

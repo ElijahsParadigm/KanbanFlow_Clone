@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 const BoardCard = ({ name, color, createdAt, id }) => {
   const navigate = useNavigate();
   return (
-    <Grid item xs={3}>
+    // Make adjustment to the board card for mobile device. Add xs={12}
+    <Grid item xs={12} sm={3}>
       <Stack
         p={2}
         bgcolor="background.paper"
